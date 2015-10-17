@@ -1,13 +1,14 @@
 package atkin
 
 import (
+	"fmt"
 	"math"
 	"runtime"
 )
 
 func atkin4x2y2(solution []bool, x0, x1, y0, y1, m, max int, next chan bool) {
 	for x := x0; x <= x1; x++ {
-		for y := y0; y <= y1; y += 2 {
+		for y := 1; y <= m; y += 2 {
 			n := 4*x*x + y*y
 			if n > max {
 				continue
@@ -24,7 +25,7 @@ func atkin4x2y2(solution []bool, x0, x1, y0, y1, m, max int, next chan bool) {
 
 func atkin3x2y2(solution []bool, x0, x1, y0, y1, m, max int, next chan bool) {
 	for x := x0; x <= x1; x += 2 {
-		for y := y0; y <= y1; y += 2 {
+		for y := 1; y <= m; y++ {
 			n := 3*x*x + y*y
 			if n > max {
 				continue
@@ -41,7 +42,7 @@ func atkin3x2y2(solution []bool, x0, x1, y0, y1, m, max int, next chan bool) {
 
 func atkin3x2ny2(solution []bool, x0, x1, y0, y1, m, max int, next chan bool) {
 	for x := x0; x <= x1; x++ {
-		for y := y0; y <= y1; y++ {
+		for y := 1; y <= m; y++ {
 			if x < y {
 				continue
 			}
@@ -62,20 +63,29 @@ func atkin3x2ny2(solution []bool, x0, x1, y0, y1, m, max int, next chan bool) {
 
 func Atkin(max int) []int {
 	var solution = make([]bool, max+1)
-	m := int(math.Sqrt(float64(max))) + 1
+	m := int(math.Sqrt(float64(max)))
 	var ps []int = []int{2, 3, 5}
 
 	cores := runtime.NumCPU()
 	runtime.GOMAXPROCS(cores)
 	next := make(chan bool, cores)
 
-	go atkin4x2y2(solution, 1, m/2, 1, m, m, max, next)
-	go atkin3x2y2(solution, 1, m, 2, m, m, max, next)
-	go atkin3x2ny2(solution, 1, m, 1, m, m, max, next)
+	fmt.Println(m)
+	step := 1000
+	for i := 1; i <= m; i += step {
+		h := i + step - 1
+		if h > m {
+			h = m
+		}
+		fmt.Println(i, h)
+		go atkin4x2y2(solution, i, h, i, h, m, max, next)
+		next <- true
+		go atkin3x2y2(solution, i, h, i, h, m, max, next)
+		next <- true
+		go atkin3x2ny2(solution, i, h, i, h, m, max, next)
+		next <- true
 
-	next <- true
-	next <- true
-	next <- true
+	}
 
 	for i := 0; i < cores; i++ {
 		next <- true

@@ -65,10 +65,10 @@ func main() {
 
 	for i := 1; i < 1024; i++ {
 		d := checkPattern(strconv.FormatUint(uint64(i), 2))
+		_ = "breakpoint"
 		if d != 0 {
 			fmt.Println(d)
 			break
 		}
 	}
-
 }

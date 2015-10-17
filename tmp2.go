@@ -1,40 +1,17 @@
-// A concurrent prime sieve
-
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
 
-// Send the sequence 2, 3, 4, ... to channel 'ch'.
-func Generate(ch chan<- int) {
-	for i := 2; ; i++ {
-		ch <- i // Send 'i' to channel 'ch'.
-	}
-}
+	"github.com/kavehmz/prime"
+)
 
-// Copy the values from channel 'in' to channel 'out',
-// removing those divisible by 'prime'.
-func Filter(in <-chan int, out chan<- int, prime int) {
-	for {
-		i := <-in // Receive value from 'in'.
-		if i%prime != 0 {
-			out <- i // Send 'i' to 'out'.
-		}
-	}
-}
-
-// The prime sieve: Daisy-chain Filter processes.
 func main() {
-	ch := make(chan int) // Create a new channel.
-	go Generate(ch)      // Launch Generate goroutine.
-	for i := 0; i < 78498; i++ {
-		prime := <-ch
-		//fmt.Println(prime)
-		if i%1000 == 0 {
-			fmt.Println(i)
-		}
-		ch1 := make(chan int)
-		go Filter(ch, ch1, prime)
-		ch = ch1
-	}
-	fmt.Println("done")
+	s := time.Now().UnixNano()
+
+	s = time.Now().UnixNano()
+	fmt.Println(len(prime.Primes(1000000000)))
+	s = time.Now().UnixNano() - s
+	fmt.Println(float64(s) / 1000000.0)
 }
