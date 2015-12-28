@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	for k, v := range []string{"id", "account_id", "action_type", "referrer_id", "contract_id", "payment_id", "amount", "balance_after"} {
 		fmt.Println(k, v)
 	}
