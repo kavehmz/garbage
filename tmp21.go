@@ -2,18 +2,19 @@ package main
 
 import "fmt"
 
-type ByteSize int64
-
-const (
-	_           = iota // ignore first value by assigning to blank identifier
-	KB ByteSize = 1 << (10 * iota)
-	MB
-	GB
-	TB
-	PB
-	EB
-)
+func myFor(i, n int, f func(int)) {
+	if i >= n {
+		return
+	}
+	i++
+	f(i)
+	myFor(i, n, f)
+}
 
 func main() {
-	fmt.Println(EB)
+
+	i := 0
+	myFor(i, 1000000, func(i int) {
+		fmt.Println(i)
+	})
 }
