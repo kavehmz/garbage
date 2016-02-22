@@ -1,21 +1,38 @@
 package main
 
 import (
-	"io"
+	"fmt"
 	"net/http"
 
 	"golang.org/x/net/websocket"
 )
 
-// Echo the data received on the WebSocket.
-func EchoServer(ws *websocket.Conn) {
-	io.Copy(ws, ws)
+func echoServer(ws *websocket.Conn) {
+	request := make([]byte, 10000)
+	n, err := ws.Read(request)
+	if err != nil {
+		fmt.Println("Error", err.Error())
+		return
+	}
+	rStr := string(request[:n])
+	fmt.Println("Read:", n, "It was ", rStr, " type:", ws.Request().FormValue("l"))
+	ws.Write([]byte(rStr))
+}
+
+func hs(c *websocket.Config, r *http.Request) error {
+	fmt.Println("Handshaking")
+	return nil
 }
 
 // This example demonstrates a trivial echo server.
 func main() {
-	http.Handle("/echo", websocket.Handler(EchoServer))
-	err := http.ListenAndServe(":12345", nil)
+	fmt.Println("before")
+	ws := websocket.Server{}
+	ws.Handshake = hs
+	ws.Handler = echoServer
+	http.Handle("/websockets/v3", ws)
+	fmt.Println("assigned")
+	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic("ListenAndServe: " + err.Error())
 	}
