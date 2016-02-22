@@ -30,6 +30,7 @@ func main() {
 	ws := websocket.Server{}
 	ws.Handshake = hs
 	ws.Handler = echoServer
+	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./static"))))
 	http.Handle("/websockets/v3", ws)
 	fmt.Println("assigned")
 	err := http.ListenAndServe(":8080", nil)
