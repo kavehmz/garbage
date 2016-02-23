@@ -19,7 +19,7 @@ func main() {
 		return n * n * n
 	}
 
-	fmt.Println(cubicvolume(5))
-	fmt.Println(cubicvolume.meter(5))
-	fmt.Println(cubicvolume.centimeter(5))
+	fmt.Println("just cubic:", cubicvolume(5))
+	fmt.Println("cubic in m^3:", cubicvolume.meter(5))
+	fmt.Println("cubic in cm^3:", cubicvolume.centimeter(5))
 }
