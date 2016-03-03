@@ -1,8 +1,11 @@
-//usr/bin/env go run $0 $@; exit $?
+//usr/bin/env go run $0 $@;exit
 
 package main
 
-import "time"
+import (
+	"os"
+	"time"
+)
 
 func init() { print("A\n") }
 func f() {
@@ -17,4 +20,5 @@ func main() {
 	go f()
 
 	time.Sleep(time.Second)
+	os.Exit(0)
 }
