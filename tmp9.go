@@ -17,7 +17,7 @@ func isDamaged(location Location) bool {
 }
 
 func checkItemsQuantity(items map[Location]Item) {
-	for loc, item := range items {
+	for loc, _ := range items {
 		id := loadItem(loc)
 		if getQuantity(id) != items[loc].quantity {
 			refillRequest(id, items)
@@ -26,7 +26,7 @@ func checkItemsQuantity(items map[Location]Item) {
 }
 
 func checkDamagedItems(items map[Location]Item) {
-	for loc, item := range items {
+	for loc, _ := range items {
 		id := loadItem(loc)
 		if isDamaged(id) {
 			damageAlert(location)

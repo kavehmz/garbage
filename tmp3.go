@@ -17,7 +17,6 @@ func main() {
 	msg := "Starting main"
 	fmt.Println(msg)
 	bus := make(chan int)
-	msg = "starting a gofunc"
 	go counting(bus)
 	for count := range bus {
 		fmt.Println("count:", count)

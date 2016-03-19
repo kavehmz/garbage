@@ -16,30 +16,33 @@ type PrimeDigit struct {
 }
 
 func getMatchedDigit(v uint64, s string) uint64 {
-	var matched uint64 = 10
+	var m uint64 = 10
+	fmt.Println(m)
 	var digit uint64
 	base := v
 	for i := len(s) - 1; i >= 0; i-- {
 		digit = v % 10
 		v = v / 10
 		if s[i] == '1' {
-			if matched == 10 {
-				matched = digit
+			if m == 10 {
+				m = digit
 			} else {
-				if matched != digit {
+				if m != digit {
 					return 0
 				}
 			}
 		}
 	}
 	pn, _ := strconv.ParseUint(s, 10, 64)
-	base = base - pn*matched
+	base = base - pn*m
 	return base
 }
 
 func checkPattern(s string) uint64 {
 	m := make(map[uint64]PrimeDigit)
-	for _, v := range p {
+	fmt.Println(m)
+	for k, v := range p {
+		fmt.Println(k)
 		if float64(v) < math.Pow(10, float64(len(s)-1)) {
 			continue
 		}
