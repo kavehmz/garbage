@@ -1,6 +1,6 @@
 language: go
 go:
-  - 1.3
+  - tip
 env:
 before_install:
   - npm install -g cloc
