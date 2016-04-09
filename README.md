@@ -10,4 +10,3 @@ func callPointertoFunc() {
 }
 
 ```
-
