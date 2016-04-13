@@ -32,8 +32,8 @@ func (o *online) add(ws io.Writer) string {
 	id := connID()
 	o.connections[id] = connInfo{"", ws}
 	o.count++
-	o.Unlock()
 	on.broadcastCount()
+	o.Unlock()
 	return id
 }
 
