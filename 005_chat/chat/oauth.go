@@ -32,9 +32,14 @@ type githubUser struct {
 //GithubCallback will handle the oauth callback and also broadcast the new user to all serssions
 func GithubCallback(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("state")
+	on.RLock()
+
 	if _, ok := on.connections[state]; !ok {
+		on.RUnlock()
 		return
 	}
+	on.RUnlock()
+
 	code := r.FormValue("code")
 	token, err := oauthConf.Exchange(oauth2.NoContext, code)
 	if err != nil {

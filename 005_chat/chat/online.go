@@ -15,7 +15,7 @@ type connInfo struct {
 }
 
 type online struct {
-	sync.Mutex
+	sync.RWMutex
 	connections map[string]connInfo
 	count       int
 }
@@ -28,12 +28,12 @@ func (o *online) broadcastCount() {
 }
 
 func (o *online) add(ws io.Writer) string {
-	o.Lock()
 	id := connID()
+	o.Lock()
 	o.connections[id] = connInfo{"", ws}
 	o.count++
-	on.broadcastCount()
 	o.Unlock()
+	on.broadcastCount()
 	return id
 }
 
@@ -41,8 +41,8 @@ func (o *online) remove(id string) {
 	o.Lock()
 	delete(o.connections, id)
 	o.count--
-	o.broadcastCount()
 	o.Unlock()
+	o.broadcastCount()
 }
 
 func (o *online) broadcast(msg string) {

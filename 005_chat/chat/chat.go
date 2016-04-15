@@ -42,7 +42,9 @@ func Chat(ws *websocket.Conn) {
 			panic(err)
 		}
 
+		on.RLock()
 		msg := outMessage{Message: in.Message, User: on.connections[connID].userID}
+		on.RUnlock()
 		chatJSON, _ := json.Marshal(msg)
 		on.broadcast(string(chatJSON))
 	}
