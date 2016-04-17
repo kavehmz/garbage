@@ -4,7 +4,7 @@ Just a simple comparison for few operation in different languages.
 echo "Go";go run test.go; echo "Perl";perl test.pl;echo "Ruby";ruby test.rb
 Go
 loop time   : 0.002945188
-loop time   : 0.319440381
+exp time   : 0.319440381
 append time : 0.566224212
 struct time   : 0.003823304
 Perl

@@ -25,7 +25,7 @@ func main() {
 		m = math.Exp(float64(i))
 	}
 	m++
-	fmt.Println("loop time   :", float64(time.Now().UnixNano()-t)/1000000000)
+	fmt.Println("exp time   :", float64(time.Now().UnixNano()-t)/1000000000)
 
 	t = time.Now().UnixNano()
 	for i := 0; i < 10000; i++ {
