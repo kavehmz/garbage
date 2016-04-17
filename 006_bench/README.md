@@ -16,5 +16,5 @@ Ruby
 loop time :0.556671
 exp time :3.305478
 append time :9.424143
-package time :1.710611
+class time :1.710611
 ```

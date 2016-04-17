@@ -31,4 +31,4 @@ t0 = Time.now
 for i in  0..10000000
 	p=Contract.new;
 end
-puts "package time :"+  (Time.now- t0).to_s
+puts "class time :"+  (Time.now- t0).to_s
