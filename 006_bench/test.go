@@ -11,6 +11,16 @@ type contract struct {
 	ctype string
 }
 
+const sqrt2PI = 2.506628274631
+
+func pdf(x, m, s float64) float64 {
+	if s < 0 {
+		panic("die")
+	}
+	z := (x - m) / s
+	return math.Exp(-0.5*z*z) / (sqrt2PI * s)
+}
+
 func main() {
 	t := time.Now().UnixNano()
 	n := 0
@@ -44,5 +54,11 @@ func main() {
 	}
 	p.ctype = "r"
 	fmt.Println("struct time   :", float64(time.Now().UnixNano()-t)/1000000000)
+
+	t = time.Now().UnixNano()
+	for i := 0; i < 10000000; i++ {
+		pdf(1.2, 1.3, 1.4)
+	}
+	fmt.Println("pdf time   :", float64(time.Now().UnixNano()-t)/1000000000)
 
 }
