@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"strconv"
 	"time"
 )
 
@@ -12,6 +13,8 @@ type contract struct {
 }
 
 const sqrt2PI = 2.506628274631
+
+var t = strconv.Itoa(5)
 
 func pdf(x, m, s float64) float64 {
 	if s < 0 {
@@ -31,8 +34,8 @@ func main() {
 
 	t = time.Now().UnixNano()
 	m := 0.0
-	for i := 0; i < 10000000; i++ {
-		m = math.Exp(float64(i))
+	for f := 0.0; f < 10000000; f++ {
+		m = math.Exp(f)
 	}
 	m++
 	fmt.Println("exp time   :", float64(time.Now().UnixNano()-t)/1000000000)

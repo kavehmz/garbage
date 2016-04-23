@@ -13,7 +13,7 @@ print "loop time :", tv_interval ( $t0 ), "\n";
 
 $t0 = [gettimeofday];
 $n=0;
-for (my $i = 0; $i < 10000000; $i++) {
+for (my $i = 0.0; $i < 10000000.0; $i++) {
 	$n=exp($i);
 }
 print "exp time :", tv_interval ( $t0 ), "\n";
