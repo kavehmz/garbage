@@ -41,6 +41,35 @@ func Insertion(a []int) {
 		for k := i; k > 0 && a[k] < a[k-1]; k-- {
 			a[k], a[k-1] = a[k-1], a[k]
 		}
+	}
+}
 
+// Merge sort
+func Merge(a []int) {
+	splitMerge(a, 0, len(a))
+}
+
+func splitMerge(a []int, begin, end int) {
+	if end-begin < 2 {
+		return
+	}
+	middle := (end + begin) / 2
+
+	splitMerge(a, begin, middle)
+	splitMerge(a, middle, end)
+	b := make([]int, end-begin)
+
+	i, j := begin, middle
+	for k := begin; k < end; k++ {
+		if i < middle && (j >= end || a[i] <= a[j]) {
+			b[k-begin] = a[i]
+			i++
+		} else {
+			b[k-begin] = a[j]
+			j = j + 1
+		}
+	}
+	for k := 0; k < end-begin; k++ {
+		a[begin+k] = b[k]
 	}
 }
