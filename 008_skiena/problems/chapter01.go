@@ -73,3 +73,45 @@ func splitMerge(a []int, begin, end int) {
 		a[begin+k] = b[k]
 	}
 }
+
+// Steps is
+var Steps int
+
+// Fib func to check the top down O(2^n) performance
+func Fib(n int) int {
+	Steps++
+	if n == 1 {
+		return 1
+	}
+	if n == 2 {
+		return 1
+	}
+	return Fib(n-1) + Fib(n-2)
+}
+
+// Quick func
+func Quick(a []int) {
+	quickSort(a, 0, len(a)-1)
+}
+
+func quickSort(a []int, lo, hi int) {
+	if lo < hi {
+		p := partition(a, lo, hi)
+		quickSort(a, lo, p-1)
+		quickSort(a, p+1, hi)
+	}
+}
+
+func partition(a []int, lo, hi int) int {
+	pivot := a[hi]
+	i := lo
+
+	for j := lo; j <= hi-1; j++ {
+		if a[j] <= pivot {
+			a[i], a[j] = a[j], a[i]
+			i = i + 1
+		}
+	}
+	a[i], a[hi] = a[hi], a[i]
+	return i
+}

@@ -12,4 +12,13 @@ func main() {
 	a := []int{1, 4, 3, 1, 7, 9, 2, 8}
 	problems.Merge(a)
 	fmt.Println(a)
+
+	fmt.Println(problems.Fib(32))
+	fmt.Println(problems.Steps)
+
+	fmt.Println(problems.Fib(32))
+
+	a = []int{1, 4, 3, 1, 7, 9, 2, 8}
+	problems.Quick(a)
+	fmt.Println(a)
 }
