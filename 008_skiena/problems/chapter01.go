@@ -115,3 +115,38 @@ func partition(a []int, lo, hi int) int {
 	a[i], a[hi] = a[hi], a[i]
 	return i
 }
+
+// Heap sort
+func Heap(a []int) {
+	n := len(a)
+	// Build heap (rearrange array)
+	for i := n/2 - 1; i >= 0; i-- {
+		heapify(a, n, i)
+	}
+	// One by one extract an element from heap
+	for i := n - 1; i >= 0; i-- {
+		// Move current root to end
+		a[0], a[i] = a[i], a[0]
+		// call max heapify on the reduced heap
+		heapify(a, i, 0)
+	}
+}
+
+func heapify(a []int, n, i int) {
+	largest := i
+	l := 2*i + 1
+	r := 2*i + 2
+
+	if l < n && a[l] > a[largest] {
+		largest = l
+	}
+
+	if r < n && a[r] > a[largest] {
+		largest = r
+	}
+
+	if largest != i {
+		a[i], a[largest] = a[largest], a[i]
+		heapify(a, n, largest)
+	}
+}
