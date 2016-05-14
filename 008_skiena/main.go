@@ -8,8 +8,34 @@ import (
 	"github.com/kavehmz/garbage/008_skiena/problems"
 )
 
+type a struct {
+	name   string
+	family string
+}
+
+var w problems.WWL
+
+func aa(a interface{}) {
+	fmt.Print(a)
+}
+
 func main() {
-	bst()
+	var r int
+	r = 9223372036854775807
+	fmt.Println(r)
+	fmt.Println(time.Now().UnixNano())
+	w := problems.WWL{}
+	fmt.Print(w)
+	fmt.Println()
+	aa(w)
+	w.Init()
+	e := a{name: "some"}
+	w.Add(e, time.Now().UTC())
+	w.Add(e, time.Now().UTC())
+	fmt.Println(w.Exists(e))
+	e = a{name: "test"}
+	p := (w.Get()[0]).(a)
+	fmt.Println(e, p)
 }
 
 func bst() {
