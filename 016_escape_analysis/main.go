@@ -1,6 +1,8 @@
 //usr/bin/env go run  -gcflags '-m -l' $0 $@;exit
 package main
 
+import "fmt"
+
 type s struct {
 	i *int32
 }
@@ -13,6 +15,8 @@ func main() {
 }
 
 func escapesToHeap(z s) *s {
+	i := 42
+	fmt.Println(i)
 	return &z
 }
 
