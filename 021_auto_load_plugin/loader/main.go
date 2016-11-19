@@ -23,7 +23,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if myApp.handler == nil {
 		fmt.Fprintf(w, "Hi there, my app is not ready yet")
 	}
+	myApp.RLock()
 	(*myApp.handler)(w, r)
+	myApp.RUnlock()
 }
 
 func loadMyApp() {
@@ -50,8 +52,8 @@ func loadMyApp() {
 		glog.Info("Func loaded")
 
 		myApp.app = p
-		myApp.Lock()
 		h := f.(func(http.ResponseWriter, *http.Request))
+		myApp.Lock()
 		myApp.handler = &h
 		myApp.Unlock()
 	}
