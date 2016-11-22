@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
+
+	"strconv"
 
 	"github.com/tsuna/gohbase"
 	"github.com/tsuna/gohbase/hrpc"
@@ -16,15 +19,18 @@ func checkErr(err error) {
 }
 
 func main() {
-	client := gohbase.NewClient("localhost")
+	client := gohbase.NewClient("localhost", gohbase.RpcQueueSize(1), gohbase.FlushInterval(time.Nanosecond))
 
-	// Values maps a ColumnFamily -> Qualifiers -> Values.
-	values := map[string]map[string][]byte{"cf": map[string][]byte{"ab": []byte("kmztest")}}
-	putRequest, err := hrpc.NewPutStr(context.Background(), "test", "key", values)
-	checkErr(err)
-	rsp, err := client.Put(putRequest)
-	checkErr(err)
-	fmt.Println(rsp)
+	t := time.Now()
+	for i := 0; i < 100; i++ {
+		// Values maps a ColumnFamily -> Qualifiers -> Values.
+		values := map[string]map[string][]byte{"cf": map[string][]byte{"ab": []byte("kmztest")}}
+		putRequest, err := hrpc.NewPutStr(context.Background(), "test", "key"+strconv.Itoa(i), values)
+		checkErr(err)
+		_, err = client.Put(putRequest)
+		checkErr(err)
+	}
+	fmt.Println(float64(time.Now().UnixNano()-t.UnixNano()) / 1000000)
 
 	fmt.Println("=====================")
 
