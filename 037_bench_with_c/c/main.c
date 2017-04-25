@@ -17,5 +17,5 @@ int main() {
     for(int i=0;i<10000000;i++) {
         tt=bench(tt);
     }
-    printf("%Lf\n", tt); 
+    printf("%0.19Lf\n", tt);
 }
