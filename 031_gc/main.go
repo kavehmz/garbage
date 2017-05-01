@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"runtime/trace"
+	"sync"
 	"time"
 )
 
 const (
 	windowSize = 200000
-	msgCount   = 1000000
+	msgCount   = 10000000
 )
 
 type message []byte
@@ -15,7 +18,6 @@ type message []byte
 type channel [windowSize]message
 
 var worst time.Duration
-var average int64
 
 func mkMessage(n int) message {
 	m := make(message, 1024)
@@ -25,22 +27,43 @@ func mkMessage(n int) message {
 	return m
 }
 
+var pool chan bool
+var l sync.Mutex
+
 func pushMsg(c *channel, highID int) {
 	start := time.Now()
 	m := mkMessage(highID)
 	(*c)[highID%windowSize] = m
 	elapsed := time.Since(start)
-	average += elapsed.Nanoseconds()
+	l.Lock()
 	if elapsed > worst {
 		worst = elapsed
 	}
+	l.Unlock()
+	<-pool
 }
 
 func main() {
+	f, err := os.Create("trace.out")
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	err = trace.Start(f)
+	if err != nil {
+		panic(err)
+	}
+	defer trace.Stop()
+
+	pool = make(chan bool, 4)
 	var c channel
 	for i := 0; i < msgCount; i++ {
-		pushMsg(&c, i)
+		pool <- true
+		go pushMsg(&c, i)
+	}
+	for i := 0; i < 4; i++ {
+		pool <- true
 	}
 	fmt.Println("Worst push time: ", worst)
-	fmt.Println("averg push time: ", float64(average)/(msgCount))
 }
