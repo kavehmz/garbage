@@ -1,0 +1,121 @@
+<script src="https://unpkg.com/vue"></script>
+
+<body>
+
+<div id="app">
+{{ message }}
+</div>
+
+<div id="app-2">
+  <span v-bind:title="message">
+    Hover your mouse over me for a few seconds
+    to see my dynamically bound title!
+  </span>
+</div>
+
+
+<div id="app-3">
+  <p v-if="seen">Now you see me</p>
+</div>
+
+<div id="app-4">
+  <ol>
+    <li v-for="todo in todos">
+      {{ todo.text }}
+    </li>
+  </ol>
+</div>
+
+<div id="app-5">
+  <p>{{ message }}</p>
+  <button v-on:click="reverseMessage">Reverse Message</button>
+</div>
+</body>
+
+
+
+
+
+
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+
+var app2 = new Vue({
+  el: '#app-2',
+  data: {
+    message: 'You loaded this page on ' + new Date()
+  }
+})
+
+
+var app3 = new Vue({
+  el: '#app-3',
+  data: {
+    seen: true
+  }
+})
+
+var app4 = new Vue({
+  el: '#app-4',
+  data: {
+    todos: [
+      { text: 'Learn JavaScript' },
+      { text: 'Learn Vue' },
+      { text: 'Build something awesome' }
+    ]
+  }
+})
+
+var app5 = new Vue({
+  el: '#app-5',
+  data: {
+    message: 'Hello Vue.js!'
+  },
+  methods: {
+    reverseMessage: function () {
+      this.message = this.message.split('').reverse().join('')
+    }
+  }
+})
+
+var ws = new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id=1&l=EN');
+var result;
+ws.onmessage = function (msg) {
+  result = JSON.parse(msg.data);
+  if (result.tick) {
+    app.message = result.tick.epoch;
+  }
+  console.log(result);
+};
+
+ws.onclose = function (e) {
+    console.log(e);
+}
+
+ws.onopen = function (e) {
+    console.log("i am open send request", e);
+   send({authorize: "qyJuIpS4VpiWEhz"});
+   send({ticks: "R_10"});   
+}
+
+function send(msg) {
+    ws.send(JSON.stringify(msg));
+}
+
+</script>
+
+{
+  "echo_req": {
+    "ticks": "R_50"
+  },
+  "msg_type": "tick",
+  "tick": {
+    "epoch": 1494537216,
+    "id": "51cb9cf8-fa38-d0b0-e97d-45ecd174aa7b",
+    "quote": "587.6473",
+    "symbol": "R_50"
