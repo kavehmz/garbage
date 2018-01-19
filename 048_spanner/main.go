@@ -22,17 +22,21 @@ func main() {
 	flag.Parse()
 
 	if spannerProject != "" {
-		// benchmark(spannerInsert, nil, nil)
 		benchmark(spannerInsert, spannerSelect, spannerSelect)
 	}
 
 	if redisURL != "" {
 		benchmark(redisInsert, nil, nil)
 	}
+
+	if aerospikeAddr != "" {
+		benchmark(aerospikeInsert, aerospikeSelect, nil)
+	}
 }
 
 func benchmark(in, selnew, selold func(int)) {
 
+	operationStart := time.Now()
 	fmt.Println("CUN", cun)
 	min := time.Now().Nanosecond()
 
@@ -46,7 +50,9 @@ func benchmark(in, selnew, selold func(int)) {
 	for i := min + 10; i < min+*max+10; i++ {
 		w <- true
 		go func(n int) {
-			time.Sleep(time.Millisecond * time.Duration(*settle))
+			if time.Since(operationStart) < time.Millisecond*time.Duration(*settle) {
+				time.Sleep(time.Millisecond * time.Duration(*settle))
+			}
 			start := time.Now()
 			in(n)
 			lock.Lock()
@@ -70,7 +76,9 @@ func benchmark(in, selnew, selold func(int)) {
 		for i := min; i < min+*max; i++ {
 			w1 <- true
 			go func(n int) {
-				time.Sleep(time.Millisecond * time.Duration(*settle))
+				if time.Since(operationStart) < time.Millisecond*time.Duration(*settle) {
+					time.Sleep(time.Millisecond * time.Duration(*settle))
+				}
 				start := time.Now()
 				selnew(n)
 				lock.Lock()
@@ -91,7 +99,9 @@ func benchmark(in, selnew, selold func(int)) {
 		for i := min; i < min+*max; i++ {
 			w2 <- true
 			go func(n int) {
-				time.Sleep(time.Millisecond * time.Duration(*settle))
+				if time.Since(operationStart) < time.Millisecond*time.Duration(*settle) {
+					time.Sleep(time.Millisecond * time.Duration(*settle))
+				}
 				start := time.Now()
 				selold(min)
 				lock.Lock()
@@ -128,5 +138,4 @@ func stats(title string, x []float64) {
 	fmt.Println("Quantile 1pct", q1)
 	fmt.Println("Quantile 95pct", q95)
 	fmt.Println("Quantile 99pct", q99)
-	// fmt.Printf("The standard deviation is %.4f and there are %g samples, so the mean\nis likely %.4f ± %.4f.", stdev, nSamples, mean, stdErr)
 }
