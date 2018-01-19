@@ -22,7 +22,6 @@ func getAerospikeClient() *aerospike.Client {
 		clientPolicy.ConnectionQueueSize = 1500
 		var err error
 		aerospikeClient, err = aerospike.NewClientWithPolicy(clientPolicy, aerospikeAddr, 3000)
-		// client, err := aerospike.NewClient("127.0.0.1", 3000)
 		if err != nil {
 			log.Panic(err)
 		}
