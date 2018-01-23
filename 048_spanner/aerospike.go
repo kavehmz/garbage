@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -43,8 +44,10 @@ func aerospikeInsert(n int) {
 		"bin2": "An elephant is a mouse with an operating system",
 		"bin3": []interface{}{"Go", 2009},
 	}
+	policy := new(aerospike.WritePolicy)
+	policy.CommitLevel = aerospike.COMMIT_ALL
 
-	err = client.Put(nil, key, bins)
+	err = client.Put(policy, key, bins)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -57,9 +60,14 @@ func aerospikeSelect(n int) {
 	if err != nil {
 		log.Panic(err)
 	}
+	policy := new(aerospike.BasePolicy)
+	policy.ConsistencyLevel = aerospike.CONSISTENCY_ALL
 
-	_, err = client.Get(nil, key)
+	rec, err := client.Get(policy, key)
 	if err != nil {
 		log.Panic(err)
+	}
+	if rec == nil {
+		fmt.Printf("record was nil", n)
 	}
 }
