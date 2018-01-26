@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	aerospike "github.com/aerospike/aerospike-client-go"
 )
@@ -32,6 +33,11 @@ func getAerospikeClient() *aerospike.Client {
 }
 
 func aerospikeInsert(n int) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered in f", r)
+		}
+	}()
 	client := getAerospikeClient()
 
 	key, err := aerospike.NewKey("test", "aerospike", "key"+strconv.Itoa(n))
@@ -45,7 +51,11 @@ func aerospikeInsert(n int) {
 		"bin3": []interface{}{"Go", 2009},
 	}
 	policy := new(aerospike.WritePolicy)
-	policy.CommitLevel = aerospike.COMMIT_ALL
+	// policy.CommitLevel = aerospike.COMMIT_ALL
+	policy.CommitLevel = aerospike.COMMIT_MASTER
+	policy.MaxRetries = 120
+	policy.SleepBetweenRetries = time.Second * 1
+	policy.Timeout = time.Second * 120
 
 	err = client.Put(policy, key, bins)
 	if err != nil {
@@ -54,6 +64,11 @@ func aerospikeInsert(n int) {
 }
 
 func aerospikeSelect(n int) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered in f", r)
+		}
+	}()
 	client := getAerospikeClient()
 
 	key, err := aerospike.NewKey("test", "aerospike", "key"+strconv.Itoa(n))
@@ -62,6 +77,10 @@ func aerospikeSelect(n int) {
 	}
 	policy := new(aerospike.BasePolicy)
 	policy.ConsistencyLevel = aerospike.CONSISTENCY_ALL
+	// policy.ConsistencyLevel = aerospike.CONSISTENCY_ONE
+	policy.MaxRetries = 120
+	policy.SleepBetweenRetries = time.Second * 1
+	policy.Timeout = time.Second * 120
 
 	rec, err := client.Get(policy, key)
 	if err != nil {

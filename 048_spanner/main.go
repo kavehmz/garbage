@@ -47,6 +47,17 @@ func benchmark(in, selnew, selold func(int)) {
 		in(i)
 	}
 
+	var counter int64
+	ticker := time.NewTicker(time.Millisecond * 100)
+	go func() {
+		for _ = range ticker.C {
+			lock.Lock()
+			fmt.Println("Rate/S", counter)
+			counter = 0
+			lock.Unlock()
+		}
+	}()
+
 	for i := min + 10; i < min+*max+10; i++ {
 		w <- true
 		go func(n int) {
@@ -56,6 +67,7 @@ func benchmark(in, selnew, selold func(int)) {
 			start := time.Now()
 			in(n)
 			lock.Lock()
+			counter++
 			s0 = append(s0, float64(time.Since(start).Nanoseconds()/1000000))
 			lock.Unlock()
 			<-w
@@ -82,6 +94,7 @@ func benchmark(in, selnew, selold func(int)) {
 				start := time.Now()
 				selnew(n)
 				lock.Lock()
+				counter++
 				s1 = append(s1, float64(time.Since(start).Nanoseconds()/1000000))
 				lock.Unlock()
 				<-w1
@@ -105,6 +118,7 @@ func benchmark(in, selnew, selold func(int)) {
 				start := time.Now()
 				selold(min)
 				lock.Lock()
+				counter++
 				s2 = append(s2, float64(time.Since(start).Nanoseconds()/1000000))
 				lock.Unlock()
 				<-w2
