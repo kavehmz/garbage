@@ -11,11 +11,11 @@ type output struct {
 }
 
 type input struct {
-	In string `json:"out"`
+	In string `json:"in"`
 }
 
 func handler(ctx context.Context, in input) (output, error) {
-	return output{Out: "Out1234"}, nil
+	return output{Out: "Out1234567"}, nil
 }
 
 func main() {

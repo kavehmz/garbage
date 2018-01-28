@@ -15,7 +15,7 @@ type output struct {
 }
 
 type input struct {
-	In string `json:"out"`
+	In string `json:"in"`
 }
 
 func main() {
@@ -28,14 +28,13 @@ func main() {
 	payload, err := json.Marshal(request)
 	checkErr(err)
 
-	result, err := client.Invoke(&lambda.InvokeInput{FunctionName: aws.String("MyTest"), Payload: payload})
+	result, err := client.Invoke(&lambda.InvokeInput{FunctionName: aws.String("lambda-handler"), Payload: payload})
 	checkErr(err)
 
 	var o output
 	err = json.Unmarshal(result.Payload, &o)
 
 	fmt.Println(err, o.Out)
-
 }
 
 func checkErr(e error) {

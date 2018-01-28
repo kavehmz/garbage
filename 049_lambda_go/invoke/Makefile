@@ -1,0 +1,2 @@
+call:
+	AWS_ACCESS_KEY_ID=$(id) AWS_SECRET_ACCESS_KEY=$(key) go run main.go
