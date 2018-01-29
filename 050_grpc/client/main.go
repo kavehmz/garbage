@@ -13,12 +13,14 @@ import (
 	"google.golang.org/grpc"
 )
 
-var max = 500
-
 var host *string
+var max *int
+var cun *int
 
 func init() {
 	host = flag.String("host", "localhost", "")
+	max = flag.Int("max", 5000, "")
+	cun = flag.Int("cun", 10, "")
 }
 
 func benchGRPC() {
@@ -29,8 +31,8 @@ func benchGRPC() {
 	defer conn.Close()
 	c := pb.NewGreeterClient(conn)
 
-	buf := make(chan bool, 10)
-	for i := 0; i < max; i++ {
+	buf := make(chan bool, *cun)
+	for i := 0; i < *max; i++ {
 		buf <- true
 		go func() {
 			_, err := c.SayHello(context.Background(), &pb.Request{Name: "name"})
@@ -41,15 +43,15 @@ func benchGRPC() {
 		}()
 	}
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < *cun; i++ {
 		buf <- true
 	}
 }
 
 func benchHTTP() {
 
-	buf := make(chan bool, 10)
-	for i := 0; i < max; i++ {
+	buf := make(chan bool, *cun)
+	for i := 0; i < *max; i++ {
 		buf <- true
 		go func() {
 			resp, err := http.Get("http://" + *host + ":8080/test/test")
@@ -65,7 +67,7 @@ func benchHTTP() {
 		}()
 	}
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < *cun; i++ {
 		buf <- true
 	}
 
