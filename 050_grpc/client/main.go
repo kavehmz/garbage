@@ -52,7 +52,7 @@ func benchHTTP() {
 	for i := 0; i < max; i++ {
 		buf <- true
 		go func() {
-			resp, err := http.Get("http://localhost:8080/test/test")
+			resp, err := http.Get("http://" + *host + ":8080/test/test")
 			if err != nil {
 				panic(err)
 			}
