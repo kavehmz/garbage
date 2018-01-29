@@ -16,11 +16,15 @@ import (
 var host *string
 var max *int
 var cun *int
+var grpcBench *bool
+var httpBench *bool
 
 func init() {
 	host = flag.String("host", "localhost", "")
 	max = flag.Int("max", 5000, "")
 	cun = flag.Int("cun", 10, "")
+	grpcBench = flag.Bool("grpc", false, "")
+	httpBench = flag.Bool("http", false, "")
 }
 
 func benchGRPC() {
@@ -75,10 +79,14 @@ func benchHTTP() {
 
 func main() {
 	flag.Parse()
-	s := time.Now()
-	benchGRPC()
-	fmt.Println("GRPC", time.Since(s))
-	s = time.Now()
-	benchHTTP()
-	fmt.Println("HTTP", time.Since(s))
+	if *grpcBench {
+		s := time.Now()
+		benchGRPC()
+		fmt.Println("GRPC", time.Since(s))
+	}
+	if *httpBench {
+		s := time.Now()
+		benchHTTP()
+		fmt.Println("HTTP", time.Since(s))
+	}
 }
