@@ -9,6 +9,7 @@ import (
 	pb "github.com/kavehmz/garbage/050_grpc/helloworld"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 type server struct{}
@@ -27,6 +28,7 @@ func startGRPC() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
+	reflection.Register(s)
 	pb.RegisterGreeterServer(s, &server{})
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
