@@ -87,6 +87,6 @@ func aerospikeSelect(n int) {
 		log.Panic(err)
 	}
 	if rec == nil {
-		fmt.Printf("record was nil", n)
+		fmt.Println("record was nil", n)
 	}
 }
