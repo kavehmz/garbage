@@ -27,3 +27,4 @@ _testmain.go
 vendor/
 Gopkg.*
 /tmp/*
+*.out
