@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -18,8 +17,9 @@ func handleRequestAndRedirect(res http.ResponseWriter, req *http.Request) {
 	done := make(chan bool)
 	go func() {
 		defer func() {
-			r := recover()
-			fmt.Println("request to backend failed:", r)
+			if r := recover(); r != nil {
+				log.Println("request to backend failed:", r)
+			}
 		}()
 
 		connections++
@@ -30,8 +30,8 @@ func handleRequestAndRedirect(res http.ResponseWriter, req *http.Request) {
 
 	select {
 	case <-done:
-	case <-time.After(time.Second):
-		log.Println("Timeout", connections, time.Since(t0), req.URL.String())
+	case <-time.After(time.Second * 2):
+		log.Println("Timeout", connections, time.Since(t0), req)
 	}
 }
 
