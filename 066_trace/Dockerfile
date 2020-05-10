@@ -1,0 +1,3 @@
+ARG GOVERSION
+FROM golang:${GOVERSION}
+WORKDIR /workspace
